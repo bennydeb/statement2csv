@@ -82,7 +82,7 @@ class StatementCorpus(object):
 
     def to_csv(self, **kwargs):
         output_file = kwargs.pop('output_file', self._output_file)
-        # TODO: Better hash, this one had collissions
+        # TODO: Better hash, this one had collisions
         # if self.duplicated:
         #     for (i, hash_) in self.duplicated:
         #         print(self.txs.iloc[i], hash_)
@@ -164,7 +164,7 @@ class StatementCorpus(object):
             :param txs_text: Transaction as Text list
             :param period_regexp: regexp used to get period
             :param period_date_groups:
-            :param date_format:
+            :param period_date_format:
             :return:
             """
             (start_groups, end_groups) = period_date_groups
@@ -178,7 +178,8 @@ class StatementCorpus(object):
             end_period = [date_found[group] for group in end_groups]
             # When start and end belong to same year, only end has year value
             # so we make start take the year from end
-            if start_period[2] == '': start_period[2] = end_period[2]
+            if start_period[2] == '':
+                start_period[2] = end_period[2]
 
             start_period = datetime.strptime(" ".join(start_period), period_date_format)
             end_period = datetime.strptime(" ".join(end_period), period_date_format)
@@ -198,7 +199,7 @@ class StatementCorpus(object):
             the bank and account type.
             :return:
             """
-            txs = []
+
             if self.StatementCorpus.bank == 'natwest' \
                     and self.StatementCorpus.account_type in ['debit', 'savings']:
                 self.statement_txs = self._extract_txs_natwest_tables()
@@ -267,9 +268,9 @@ class StatementCorpus(object):
             found_txs = self._extract_regexp_groups(found_txs, reg_exp_groups)
             return found_txs
 
-        def _fix_dates(self, date_position=[0, 1]):
+        def _fix_dates(self, date_position=(0, 1)):
             """
-            Makes sure dates on statament_txs have the
+            Makes sure dates on statement_txs have the
             correct format (%d %b %Y).
             Note: natwest credit requires a special treatment
             as date format is %d %B
